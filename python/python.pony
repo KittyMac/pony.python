@@ -23,7 +23,7 @@ primitive Python
 		@Py_SetProgramName("PonyPython".cstring())
 		@Py_Initialize()
 	
-	fun run(script:String) =>
+	fun run(script:String box) =>
 		@PyRun_SimpleStringFlags(script.cstring(), Pointer[PyCompilerFlags])
 		
 		
