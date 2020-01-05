@@ -1,6 +1,8 @@
 use "path:/usr/lib" if osx
 use "lib:python"
 
+use @realpath[Pointer[U8]](filePath:Pointer[U8] tag, outputPath:Pointer[U8] tag)
+
 use @Py_SetProgramName[None](name:Pointer[U8] tag)
 use @Py_GetProgramName[Pointer[U8]]()
 use @Py_SetPythonHome[None](name:Pointer[U8] tag)
@@ -35,8 +37,13 @@ primitive Python
 		@Py_Finalize()
 	
 	fun start() =>
-		@Py_SetProgramName("PonyPython".cstring())
 		@Py_Initialize()
+	
+	fun addModuleSearchPath(dirPath:String) =>
+		let outputPath = String(1024)
+		@realpath[Pointer[U8]](dirPath.cstring(), outputPath.cpointer(0))
+		outputPath.recalc()
+		try run("import sys\nsys.path.insert(0, \"" + outputPath + "\")")? end
 	
 	fun run(script:String box)? =>
 		if @PyRun_SimpleStringFlags(script.cstring(), Pointer[PyCompilerFlags]) != 0 then
