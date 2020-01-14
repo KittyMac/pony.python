@@ -40,10 +40,7 @@ primitive Python
 		@Py_Initialize()
 	
 	fun addModuleSearchPath(dirPath:String) =>
-		let outputPath = String(1024)
-		@realpath[Pointer[U8]](dirPath.cstring(), outputPath.cpointer(0))
-		outputPath.recalc()
-		try run("import sys\nsys.path.insert(0, \"" + outputPath + "\")")? end
+		try run("import os\nimport sys\nsys.path.insert(0, os.path.realpath(\"./" + dirPath + "\"))")? end
 	
 	fun run(script:String box)? =>
 		if @PyRun_SimpleStringFlags(script.cstring(), Pointer[PyCompilerFlags]) != 0 then
