@@ -1,0 +1,8 @@
+{
+  "deps": [
+    {
+      "locator": "github.com/KittyMac/pony.stringExt.git"
+    }
+  ],
+  "info": {}
+}
